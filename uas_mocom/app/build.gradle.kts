@@ -54,6 +54,7 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.6.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
     testImplementation(libs.junit)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
