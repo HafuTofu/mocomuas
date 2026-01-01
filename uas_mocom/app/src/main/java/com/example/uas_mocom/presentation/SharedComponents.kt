@@ -20,14 +20,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.uas_mocom.model.SportType
+
 
 @Composable
 fun TopBar(title: String, onBack: () -> Unit) {
     Row(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
         IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = TextWhite) }
         Text(title, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextWhite)
-        IconButton(onClick = {}) { Icon(Icons.Default.Settings, null, tint = TextWhite) }
+        Spacer(modifier = Modifier.size(48.dp))
     }
 }
 
@@ -51,18 +51,110 @@ fun BottomControls(onReset: () -> Unit, onToggleTimer: () -> Unit, isTimerRunnin
 }
 
 @Composable
-fun NewBottomNavBar(onHomeClick: () -> Unit, onNewGameClick: () -> Unit) {
-    Box(modifier = Modifier.fillMaxWidth().background(DarkBackground).padding(vertical = 12.dp), contentAlignment = Alignment.BottomCenter) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable { onHomeClick() }) {
-                Icon(Icons.Default.Home, "Home", tint = PrimaryBlue, modifier = Modifier.size(28.dp)); Spacer(modifier = Modifier.height(4.dp)); Text("Home", color = PrimaryBlue, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+fun SimpleGameControls(
+    onReset: () -> Unit,
+    onEndMatch: () -> Unit,
+    onToggleTimer: () -> Unit,
+    isTimerRunning: Boolean
+) {
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Button(
+                onClick = onReset,
+                modifier = Modifier.weight(1f).height(56.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = CardSurface),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Icon(Icons.Default.Refresh, null, tint = TextWhite)
+                Text(" Reset", color = TextWhite)
             }
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.offset(y = (-10).dp).clickable { onNewGameClick() }) {
-                Box(modifier = Modifier.size(56.dp).clip(CircleShape).background(PrimaryBlue).border(4.dp, DarkBackground.copy(alpha=0.5f), CircleShape), contentAlignment = Alignment.Center) { Icon(Icons.Default.Add, "New Game", tint = TextWhite, modifier = Modifier.size(32.dp)) }
-                Spacer(modifier = Modifier.height(4.dp)); Text("New Game", color = TextWhite, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+            Button(
+                onClick = onEndMatch,
+                modifier = Modifier.weight(1f).height(56.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = AccentRed),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Icon(Icons.Default.Flag, null, tint = TextWhite)
+                Text(" End Match", color = TextWhite)
             }
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable { }) {
-                Icon(Icons.Default.DateRange, "Scoreboard", tint = TextGray, modifier = Modifier.size(28.dp)); Spacer(modifier = Modifier.height(4.dp)); Text("Scoreboard", color = TextGray, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+        }
+        Button(
+            onClick = onToggleTimer,
+            modifier = Modifier.fillMaxWidth().height(56.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = if (isTimerRunning) AccentRed else PrimaryBlue),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Icon(if (isTimerRunning) Icons.Default.Pause else Icons.Default.PlayArrow, null)
+            Text(if (isTimerRunning) " Pause" else " Start Timer")
+        }
+    }
+}
+
+@Composable
+fun NewBottomNavBar(
+    activeTab: String = "HOME",
+    onHomeClick: () -> Unit,
+    onNewGameClick: () -> Unit,
+    onHistoryClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(DarkBackground)
+            .padding(vertical = 12.dp),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            // Home
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onHomeClick() }
+            ) {
+                val isActive = activeTab == "HOME"
+                Icon(Icons.Default.Home, "Home", tint = if (isActive) PrimaryBlue else TextGray, modifier = Modifier.size(28.dp))
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Home", color = if (isActive) PrimaryBlue else TextGray, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+            }
+            
+            // New Game (Center)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .weight(1f)
+                    .offset(y = (-10).dp)
+                    .clickable { onNewGameClick() }
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
+                        .background(PrimaryBlue)
+                        .border(4.dp, DarkBackground.copy(alpha = 0.5f), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(Icons.Default.Add, "New Game", tint = TextWhite, modifier = Modifier.size(32.dp))
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("New Game", color = TextWhite, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+            }
+            
+            // History
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onHistoryClick() }
+            ) {
+                val isActive = activeTab == "HISTORY"
+                Icon(Icons.Default.History, "History", tint = if (isActive) PrimaryBlue else TextGray, modifier = Modifier.size(28.dp))
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("History", color = if (isActive) PrimaryBlue else TextGray, fontSize = 12.sp, fontWeight = FontWeight.Medium)
             }
         }
     }
@@ -76,15 +168,6 @@ fun HomeSportCard(title: String, subtitle: String, icon: ImageVector, color: Bru
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopEnd) { Box(modifier = Modifier.size(32.dp).clip(CircleShape).background(Color.White.copy(0.2f)), contentAlignment = Alignment.Center) { Icon(icon, null, tint = TextWhite, modifier = Modifier.size(16.dp)) } }
             Column { Text(title, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = TextWhite); Text(subtitle, fontSize = 12.sp, color = TextWhite.copy(alpha = 0.8f)) }
         }
-    }
-}
-
-@Composable
-fun SportCard(sport: SportType, isSelected: Boolean, onClick: () -> Unit) {
-    val borderColor = if (isSelected) PrimaryBlue else Color.Transparent
-    val bg = if (isSelected) PrimaryBlue.copy(alpha = 0.1f) else CardSurface
-    Column(modifier = Modifier.width(100.dp).height(120.dp).clip(RoundedCornerShape(16.dp)).background(bg).border(2.dp, borderColor, RoundedCornerShape(16.dp)).clickable { onClick() }.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-        Icon(sport.icon, null, tint = if (isSelected) PrimaryBlue else TextGray, modifier = Modifier.size(32.dp)); Spacer(modifier = Modifier.height(12.dp)); Text(sport.title, color = if (isSelected) PrimaryBlue else TextGray, fontSize = 12.sp)
     }
 }
 
