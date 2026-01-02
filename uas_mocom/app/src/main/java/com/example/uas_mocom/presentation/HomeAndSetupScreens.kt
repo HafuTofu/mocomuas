@@ -1,5 +1,6 @@
 package com.example.uas_mocom.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,11 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.uas_mocom.data.MatchEntity
+import androidx.compose.ui.res.painterResource
+import com.example.uas_mocom.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -41,19 +45,19 @@ fun HomeScreen(matches: List<MatchEntity>, onViewHistory: () -> Unit = {}) {
                 modifier = Modifier
                     .size(40.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(PrimaryBlue),
+                    .background(Color.White.copy(alpha = 0.8f)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    Icons.Default.Scoreboard,
-                    contentDescription = null,
-                    tint = TextWhite,
-                    modifier = Modifier.size(24.dp)
+                Image(
+                    painter = painterResource(id = R.drawable.logo_loading),
+                    contentDescription = "Funboard logo",
+                    modifier = Modifier.size(36.dp),
+                    contentScale = ContentScale.Fit
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                "Scoreboard",
+                "Funboard",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = TextWhite
