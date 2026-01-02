@@ -16,11 +16,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.uas_mocom.model.Match
-import com.example.uas_mocom.model.dummyMatches
+import com.example.uas_mocom.data.MatchEntity
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
-fun HomeScreen(onViewHistory: () -> Unit = {}) {
+fun HomeScreen(matches: List<MatchEntity>, onViewHistory: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,31 +72,37 @@ fun HomeScreen(onViewHistory: () -> Unit = {}) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Recent Matches List - Limited to 5
-        dummyMatches.take(5).forEach { match ->
-            MatchCard(match)
-            Spacer(modifier = Modifier.height(12.dp))
-        }
+        if (matches.isEmpty()) {
+            Text(
+                "No matches yet. Start a game to see results here.",
+                color = TextGray,
+                fontSize = 14.sp
+            )
+        } else {
+            matches.take(5).forEach { match ->
+                MatchCard(match)
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
-        // View More Button
-        if (dummyMatches.size >= 5) {
-            TextButton(
-                onClick = onViewHistory,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    "View More",
-                    color = PrimaryBlue,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 14.sp
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Icon(
-                    Icons.Default.ArrowForward,
-                    contentDescription = null,
-                    tint = PrimaryBlue,
-                    modifier = Modifier.size(16.dp)
-                )
+            if (matches.size > 5) {
+                TextButton(
+                    onClick = onViewHistory,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        "View More",
+                        color = PrimaryBlue,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        Icons.Default.ArrowForward,
+                        contentDescription = null,
+                        tint = PrimaryBlue,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
             }
         }
 
@@ -103,9 +111,10 @@ fun HomeScreen(onViewHistory: () -> Unit = {}) {
 }
 
 @Composable
-private fun MatchCard(match: Match) {
+private fun MatchCard(match: MatchEntity) {
     val homeWins = match.homeScore > match.guestScore
     val guestWins = match.guestScore > match.homeScore
+    val formattedDate = formatDate(match.timestamp)
     
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -119,7 +128,7 @@ private fun MatchCard(match: Match) {
         ) {
             // Date
             Text(
-                match.date,
+                formattedDate,
                 fontSize = 11.sp,
                 color = TextGray,
                 letterSpacing = 0.5.sp
@@ -231,4 +240,9 @@ fun SetupScreen(onBack: () -> Unit, onStartMatch: (String, String) -> Unit) {
             Text("Start Match", fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
     }
+}
+
+private fun formatDate(timestamp: Long): String {
+    val formatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+    return formatter.format(Date(timestamp))
 }

@@ -7,17 +7,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.uas_mocom.model.Match
-import com.example.uas_mocom.model.dummyMatches
+import com.example.uas_mocom.data.MatchEntity
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
-fun HistoryScreen() {
+fun HistoryScreen(matches: List<MatchEntity>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,17 +37,24 @@ fun HistoryScreen() {
         )
         
         Text(
-            "${dummyMatches.size} matches played",
+            "${matches.size} matches played",
             fontSize = 14.sp,
             color = TextGray
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Match List
-        dummyMatches.forEach { match ->
-            HistoryMatchCard(match)
-            Spacer(modifier = Modifier.height(12.dp))
+        if (matches.isEmpty()) {
+            Text(
+                "No matches yet. Finish a game to see it here.",
+                color = TextGray,
+                fontSize = 14.sp
+            )
+        } else {
+            matches.forEach { match ->
+                HistoryMatchCard(match)
+                Spacer(modifier = Modifier.height(12.dp))
+            }
         }
 
         Spacer(modifier = Modifier.height(100.dp))
@@ -53,9 +62,10 @@ fun HistoryScreen() {
 }
 
 @Composable
-private fun HistoryMatchCard(match: Match) {
+private fun HistoryMatchCard(match: MatchEntity) {
     val homeWins = match.homeScore > match.guestScore
     val guestWins = match.guestScore > match.homeScore
+    val formattedDate = formatDate(match.timestamp)
     
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -69,7 +79,7 @@ private fun HistoryMatchCard(match: Match) {
         ) {
             // Date
             Text(
-                match.date,
+                formattedDate,
                 fontSize = 11.sp,
                 color = TextGray,
                 letterSpacing = 0.5.sp
@@ -157,4 +167,9 @@ private fun HistoryMatchCard(match: Match) {
             }
         }
     }
+}
+
+private fun formatDate(timestamp: Long): String {
+    val formatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+    return formatter.format(Date(timestamp))
 }

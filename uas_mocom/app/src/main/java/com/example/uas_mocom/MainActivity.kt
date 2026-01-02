@@ -33,7 +33,8 @@ fun SportScoreboardApp() {
     var currentScreen by remember { mutableStateOf("HOME") }
 
     // Single unified ViewModel
-    val gameViewModel: GameViewModel = viewModel()
+    val gameViewModel: GameViewModel = viewModel(factory = GameViewModel.Factory)
+    val matchHistory by gameViewModel.matchHistory.collectAsState()
 
     ScoreboardTheme {
         Scaffold(
@@ -55,10 +56,11 @@ fun SportScoreboardApp() {
             Box(modifier = modifier.fillMaxSize()) {
                 when (currentScreen) {
                     "HOME" -> HomeScreen(
+                        matches = matchHistory,
                         onViewHistory = { currentScreen = "HISTORY" }
                     )
 
-                    "HISTORY" -> HistoryScreen()
+                    "HISTORY" -> HistoryScreen(matches = matchHistory)
 
                     "SETUP" -> SetupScreen(
                         onBack = { currentScreen = "HOME" },
@@ -70,7 +72,7 @@ fun SportScoreboardApp() {
 
                     "GAME" -> GameScreen(
                         viewModel = gameViewModel,
-                        onBack = { currentScreen = "HOME" }
+                        onBackToHome = { currentScreen = "HOME" }
                     )
                 }
             }

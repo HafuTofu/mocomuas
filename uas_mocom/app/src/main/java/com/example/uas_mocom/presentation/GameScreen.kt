@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.example.uas_mocom.viewmodel.GameViewModel
 
 @Composable
-fun GameScreen(viewModel: GameViewModel, onBack: () -> Unit) {
+fun GameScreen(viewModel: GameViewModel, onBackToHome: () -> Unit) {
     val homeName by viewModel.homeName.collectAsState()
     val guestName by viewModel.guestName.collectAsState()
     val homeScore by viewModel.homeScore.collectAsState()
@@ -29,7 +29,7 @@ fun GameScreen(viewModel: GameViewModel, onBack: () -> Unit) {
             .fillMaxSize()
             .background(DarkBackground)
     ) {
-        TopBar("SCORE", onBack)
+        TopBar("SCORE", onBackToHome)
 
         // Score Cards - Stacked vertically
         Column(
@@ -56,7 +56,11 @@ fun GameScreen(viewModel: GameViewModel, onBack: () -> Unit) {
 
         GameControls(
             onReset = { viewModel.resetGame() },
-            onEndMatch = { onBack() }
+            onEndMatch = {
+                viewModel.saveCurrentMatch()
+                viewModel.resetGame()
+                onBackToHome()
+            }
         )
     }
 }
