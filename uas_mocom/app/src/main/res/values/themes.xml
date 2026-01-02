@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.Uas_mocom" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.Uas_mocom.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_inset_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.Uas_mocom</item>
+    </style>
 </resources>

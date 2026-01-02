@@ -66,6 +66,12 @@ class GameViewModel(private val repository: MatchRepository) : ViewModel() {
         }
     }
 
+    fun clearHistory() {
+        viewModelScope.launch {
+            repository.clearAll()
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
