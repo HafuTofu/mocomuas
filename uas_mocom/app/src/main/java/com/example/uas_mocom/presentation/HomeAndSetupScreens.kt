@@ -269,14 +269,14 @@ fun SetupScreen(onBack: () -> Unit, onStartMatch: (String, String) -> Unit) {
     var homeName by remember { mutableStateOf("Home") }
     var guestName by remember { mutableStateOf("Guest") }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState())) {
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)) {
-            IconButton(onClick = onBack) { Icon(Icons.Default.Close, contentDescription = "Close", tint = TextWhite) }
+    Column(modifier = Modifier.fillMaxSize().padding(top = 48.dp, start = 24.dp, end = 24.dp, bottom = 12.dp).verticalScroll(rememberScrollState())) {
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp).size(40.dp)) {
+            IconButton(onClick = onBack) { Icon(Icons.Default.Close, contentDescription = "Close", tint = TextWhite, modifier = Modifier.size(36.dp)) }
             Text("New Game Setup", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = TextWhite, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
             Spacer(modifier = Modifier.size(48.dp))
         }
         
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         TeamInput("Home Team", Icons.Default.Home, homeName) { homeName = it }
         Spacer(modifier = Modifier.height(16.dp))
         TeamInput("Guest Team", Icons.Default.AirplanemodeActive, guestName) { guestName = it }

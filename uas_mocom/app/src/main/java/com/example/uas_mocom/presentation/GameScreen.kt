@@ -2,9 +2,11 @@ package com.example.uas_mocom.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -28,29 +30,61 @@ fun GameScreen(viewModel: GameViewModel, onBackToHome: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(DarkBackground)
+            .padding(top = 48.dp, start = 24.dp, end = 24.dp, bottom = 12.dp),
     ) {
-        TopBar("SCORE", onBackToHome)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+                .padding(bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+                IconButton(
+                    onClick = onBackToHome,
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = TextWhite,
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
+                Text(
+                    text = "SCORE",
+                    color = TextWhite,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp
+                )
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.Transparent,
+                    modifier = Modifier.size(36.dp)
+                )
+        }
 
         // Score Cards - Stacked vertically
         Column(
             modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .weight(0.6f)
+                .padding(horizontal = 0.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             TeamScoreCard(
                 name = homeName,
                 score = homeScore,
                 isHome = true,
                 onScoreChange = { viewModel.updateHomeScore(it) },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(0.6f)
             )
             TeamScoreCard(
                 name = guestName,
                 score = guestScore,
                 isHome = false,
                 onScoreChange = { viewModel.updateGuestScore(it) },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(0.6f)
             )
         }
 
@@ -163,7 +197,7 @@ private fun GameControls(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(bottom = 0.dp, top = 8.dp, start = 0.dp, end = 0.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedButton(
